@@ -65,3 +65,18 @@ TEST_F(ui_CustomList, should_pass_when_delete_secound_element_in_list)
 	ASSERT_EQ(2, sut.Size());
 
 }
+
+
+TEST_F(ui_CustomList, should_pass_when_delete_last_list_element_work)
+{
+	int value_to_insert = 3;
+	int value_to_insert2 = 33;
+	int value_to_insert3 = 34;
+	ASSERT_TRUE(sut.AddFirst(value_to_insert));
+	ASSERT_TRUE(sut.AddFirst(value_to_insert2));
+	ASSERT_TRUE(sut.AddFirst(value_to_insert3));
+	ASSERT_TRUE(sut.DeleteByValue(value_to_insert));
+	ASSERT_EQ(value_to_insert3, sut.GetFirstValue());
+	ASSERT_EQ(2, sut.Size());
+
+}

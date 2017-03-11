@@ -59,18 +59,16 @@ bool CustomList::DeleteByValue(int value)
 
 	if (*root->value == value)
 	{
-		root = std::move(root->next);
-		currentSize--;
+		DeleteFirst();
 		return true;
 	}
+
 	Node * currentNode = root.get();
 	while (currentNode->next != nullptr)
 	{
 		if (*currentNode->next->value == value)
 		{
-			std::shared_ptr<Node> toDelete = std::move(currentNode->next);
-			currentNode->next = std::move(toDelete->next);
-			currentSize--;
+			deleteAfterNode(currentNode);
 			return true;
 		}
 		currentNode = currentNode->next.get();
@@ -78,12 +76,36 @@ bool CustomList::DeleteByValue(int value)
 	return false;
 }
 
+bool CustomList::DeleteFirst()
+{
+	if (root != nullptr)
+	{
+		root = std::move(root->next);
+		currentSize--;
+		return true;
+	}
+	return false;
+}
+
 CustomList::~CustomList()
 {
+	while (DeleteFirst());
 }
 
 std::unique_ptr<Node> CustomList::createNewNode(int value)
 {
 	++currentSize;
 	return std::make_unique<Node>(value);
+}
+
+bool CustomList::deleteAfterNode(Node * node)
+{
+	if (node != nullptr) {
+		std::shared_ptr<Node> toDelete = std::move(node->next);
+		node->next = std::move(toDelete->next);
+		currentSize--;
+		return true;
+	}
+
+	return false;
 }
