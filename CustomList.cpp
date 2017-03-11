@@ -6,7 +6,7 @@ CustomList::CustomList() : root(nullptr)
 {
 }
 
-CustomList::CustomList(int value) : root(std::make_unique<Node>(value))
+CustomList::CustomList(int value) : root(createNewNode(value))
 {
 
 }
@@ -27,7 +27,7 @@ bool CustomList::AddFirst(int value)
 	if (root == nullptr)
 	{
 		try {
-			root = std::make_unique<Node>(value);
+			root = createNewNode(value);
 			return true;
 		}
 		catch (std::exception& e)
@@ -36,7 +36,7 @@ bool CustomList::AddFirst(int value)
 		}
 	}
 	try {
-		std::unique_ptr<Node> temp = std::make_unique<Node>(value);
+		std::unique_ptr<Node> temp = createNewNode(value);
 		temp->next = std::move(root);
 		root = std::move(temp);
 		return true;
@@ -47,6 +47,11 @@ bool CustomList::AddFirst(int value)
 	}
 }
 
+int CustomList::Size()
+{
+	return currentSize;
+}
+
 bool CustomList::DeleteByValue(int value)
 {
 	if (root == nullptr)
@@ -55,6 +60,7 @@ bool CustomList::DeleteByValue(int value)
 	if (*root->value == value)
 	{
 		root = std::move(root->next);
+		currentSize--;
 		return true;
 	}
 	Node * currentNode = root.get();
@@ -64,6 +70,7 @@ bool CustomList::DeleteByValue(int value)
 		{
 			std::shared_ptr<Node> toDelete = std::move(currentNode->next);
 			currentNode->next = std::move(toDelete->next);
+			currentSize--;
 			return true;
 		}
 		currentNode = currentNode->next.get();
@@ -73,4 +80,10 @@ bool CustomList::DeleteByValue(int value)
 
 CustomList::~CustomList()
 {
+}
+
+std::unique_ptr<Node> CustomList::createNewNode(int value)
+{
+	++currentSize;
+	return std::make_unique<Node>(value);
 }

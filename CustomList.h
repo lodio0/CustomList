@@ -16,10 +16,13 @@ public:
 
 	bool AddFirst(int value);
 
+	int Size();
 
 	bool DeleteByValue(int value);//delete first value with value
 	~CustomList();
 private:
+	std::unique_ptr<Node> createNewNode(int value);
+	int currentSize =0 ;
 	std::unique_ptr<Node> root;
 };
 
